@@ -87,7 +87,9 @@ function plotVertex(ctx: CanvasRenderingContext2D, camera: Camera, vertex: Verte
 }
 
 export default function IsoCanvas({ vertices, edges }: { vertices: Vertex[]; edges: Edge[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [size, setSize] = useState({ width: 900, height: 650 });
   const [yaw, setYaw] = useState(TRUE_ISO_YAW);
   const [pitch, setPitch] = useState(TRUE_ISO_PITCH);
   const [scale, setScale] = useState(60);
@@ -96,6 +98,18 @@ export default function IsoCanvas({ vertices, edges }: { vertices: Vertex[]; edg
   const [showEdges, setShowEdges] = useState(true);
 
   const dragState = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) setSize({ width, height });
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -131,7 +145,7 @@ export default function IsoCanvas({ vertices, edges }: { vertices: Vertex[]; edg
     for (const vertex of vertices) {
       plotVertex(ctx, camera, vertex, showVertexLabels);
     }
-  }, [yaw, pitch, scale, showAxes, showGrid, showEdges, vertices, edges]);
+  }, [yaw, pitch, scale, showAxes, showGrid, showEdges, vertices, edges, size]);
 
   function handlePointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
     dragState.current = { x: e.clientX, y: e.clientY };
@@ -174,17 +188,27 @@ export default function IsoCanvas({ vertices, edges }: { vertices: Vertex[]; edg
   }
 
   return (
-    <div>
-      <canvas
-        ref={canvasRef}
-        width={900}
-        height={650}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onWheel={handleWheel}
-        style={{ touchAction: "none", cursor: "grab", background: "#14141a", border: "1px solid #333" }}
-      />
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, minHeight: 0 }}>
+      <div ref={containerRef} style={{ flex: 1, minHeight: 0 }}>
+        <canvas
+          ref={canvasRef}
+          width={size.width}
+          height={size.height}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onWheel={handleWheel}
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+            touchAction: "none",
+            cursor: "grab",
+            background: "#14141a",
+            border: "1px solid #333",
+          }}
+        />
+      </div>
       <div style={{ marginTop: "0.75rem", display: "flex", gap: "1rem", alignItems: "center" }}>
         <button onClick={resetView}>Reset view</button>
         <label style={{ display: "flex", gap: "0.4rem", alignItems: "center", fontSize: "0.9rem" }}>

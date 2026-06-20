@@ -18,7 +18,7 @@ export interface Scene {
   nextEdgeId: number;
 }
 
-function buildScene(positions: Vec3[], pairs: [number, number][]): Scene {
+export function buildScene(positions: Vec3[], pairs: [number, number][]): Scene {
   const vertices: Vertex[] = positions.map((p, id) => ({ id, ...p }));
   const edges: Edge[] = pairs.map(([a, b], id) => ({ id, a, b }));
   return { vertices, edges, nextVertexId: vertices.length, nextEdgeId: edges.length };
