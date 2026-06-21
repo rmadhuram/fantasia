@@ -3,27 +3,17 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const CERT_FILES = [
-  "1993-abacus-software.jpg",
-  "1993-compsem-software.jpg",
-  "1993-interrupt-software.jpg",
-  "1994-krec-software.jpg",
-  "1994-nexus-software.jpg",
-  "1994-surge-project.jpg",
-  "1994-traitdunion-software.jpg",
+const CERTS = [
+  { file: "1993-abacus-software.jpg", year: "1993", name: "Abacus", college: "CEG, Guindy" },
+  { file: "1993-compsem-software.jpg", year: "1993", name: "Compsem", college: "Annamalai University" },
+  { file: "1993-interrupt-software.jpg", year: "1993", name: "Interrupt", college: "SVCE" },
+  { file: "1994-krec-software.jpg", year: "1994", name: "*.Fest", college: "KREC, Suratkal" },
+  { file: "1994-nexus-software.jpg", year: "1994", name: "Nexus", college: "GCT, Coimbatore" },
+  { file: "1994-surge-project.jpg", year: "1994", name: "Surge", college: "Annamalai University" },
+  { file: "1994-traitdunion-software.jpg", year: "1994", name: "Trait-d'Union", college: "PEC" },
 ];
 
-function titleFromFile(file: string) {
-  const [year, ...rest] = file.replace(/\.[^.]+$/, "").split("-");
-  const name = rest
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-  return { year, name };
-}
-
-const ACCOLADES = CERT_FILES.map((file) => ({ file, ...titleFromFile(file) })).sort(
-  (a, b) => a.year.localeCompare(b.year) || a.name.localeCompare(b.name)
-);
+const ACCOLADES = [...CERTS].sort((a, b) => a.year.localeCompare(b.year) || a.name.localeCompare(b.name));
 
 function navButtonStyle(side: "left" | "right"): React.CSSProperties {
   return {
@@ -86,14 +76,16 @@ export default function AccoladesPage() {
             <div style={{ position: "relative", width: "100%", height: "160px" }}>
               <Image
                 src={`/certs/${cert.file}`}
-                alt={`${cert.name} (${cert.year})`}
+                alt={`${cert.name}, ${cert.college} (${cert.year})`}
                 fill
                 style={{ objectFit: "cover" }}
               />
             </div>
             <div style={{ padding: "0.6rem 0.75rem" }}>
               <div style={{ fontWeight: 600 }}>{cert.name}</div>
-              <div style={{ opacity: 0.6, fontSize: "0.85rem" }}>{cert.year}</div>
+              <div style={{ opacity: 0.6, fontSize: "0.85rem" }}>
+                {cert.college} · {cert.year}
+              </div>
             </div>
           </button>
         ))}
@@ -130,7 +122,7 @@ export default function AccoladesPage() {
           >
             <Image
               src={`/certs/${selected.file}`}
-              alt={`${selected.name} (${selected.year})`}
+              alt={`${selected.name}, ${selected.college} (${selected.year})`}
               fill
               style={{ objectFit: "contain", borderRadius: "6px" }}
             />
@@ -144,7 +136,7 @@ export default function AccoladesPage() {
                 color: "#e8e8ec",
               }}
             >
-              {selected.name} ({selected.year})
+              {selected.name}, {selected.college} ({selected.year})
             </div>
           </div>
           <button

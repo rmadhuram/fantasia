@@ -26,10 +26,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <main style={{ height: "100vh", padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          <h1 style={{ margin: 0 }}>Fantasia! v4.0 - Isometric 3D Engine</h1>
+        <main style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
           <SectionNav />
-          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>{children}</div>
+          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", padding: "1.5rem 2rem" }}>
+            {children}
+          </div>
         </main>
       </body>
     </html>
