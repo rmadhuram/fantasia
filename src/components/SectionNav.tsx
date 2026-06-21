@@ -7,6 +7,7 @@ const SECTIONS = [
   { href: "/wireframes", label: "Wireframes" },
   { href: "/meshes", label: "Meshes" },
   { href: "/solid-of-revolution", label: "Solid of Revolution" },
+  { href: "/accolades", label: "Accolades" },
 ];
 
 export default function SectionNav() {

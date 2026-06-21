@@ -31,6 +31,12 @@ export default function FunctionEditor({
   onApply: (source: string) => void;
 }) {
   const [text, setText] = useState(value);
+  const [syncedValue, setSyncedValue] = useState(value);
+
+  if (value !== syncedValue) {
+    setSyncedValue(value);
+    setText(value);
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
